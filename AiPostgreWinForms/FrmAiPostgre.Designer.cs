@@ -163,6 +163,7 @@
             dgv_airesult.RowHeadersWidth = 62;
             dgv_airesult.Size = new Size(757, 417);
             dgv_airesult.TabIndex = 7;
+            dgv_airesult.CellMouseDown += dgv_airesult_CellMouseDown;
             // 
             // lbl_title
             // 
@@ -579,10 +580,12 @@
             // pcbx_loadinggif
             // 
             pcbx_loadinggif.BackgroundImageLayout = ImageLayout.Stretch;
+            pcbx_loadinggif.Dock = DockStyle.Fill;
             pcbx_loadinggif.Image = (Image)resources.GetObject("pcbx_loadinggif.Image");
-            pcbx_loadinggif.Location = new Point(165, 41);
+            pcbx_loadinggif.Location = new Point(3, 27);
             pcbx_loadinggif.Name = "pcbx_loadinggif";
-            pcbx_loadinggif.Size = new Size(550, 550);
+            pcbx_loadinggif.Size = new Size(0, 0);
+            pcbx_loadinggif.SizeMode = PictureBoxSizeMode.Zoom;
             pcbx_loadinggif.TabIndex = 0;
             pcbx_loadinggif.TabStop = false;
             // 

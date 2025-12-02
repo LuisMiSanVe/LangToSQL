@@ -465,7 +465,8 @@ namespace AiPostgreWinForms
                                             }));
                                     }
                                 }
-                                catch (Exception ex) {
+                                catch (Exception ex)
+                                {
                                     MessageBox.Show("The configured Database couldn't be reached, please check if the Database can still be connected with this configuration.", "Database can't be reached", MessageBoxButtons.OK, MessageBoxIcon.Error);
                                     btn_dbsettings.Invoke((MethodInvoker)(() =>
                                     {
@@ -596,7 +597,7 @@ namespace AiPostgreWinForms
             btn_mapdb.Enabled = true;
 
             // Discard the changes
-            FrmAiPostgre_Load(sender,e);
+            FrmAiPostgre_Load(sender, e);
         }
 
         private void FrmAiPostgre_FormClosing(object sender, FormClosingEventArgs e)
@@ -954,6 +955,25 @@ namespace AiPostgreWinForms
                 {
                     btn_selectmap.BackgroundImage = il_selectimages.Images[0];
                     tt_hover.SetToolTip(btn_selectmap, "Select Map");
+                }
+            }
+        }
+
+        private void dgv_airesult_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
+            {
+                if (e.Button == MouseButtons.Right)
+                {
+                    var cell = dgv_airesult[e.ColumnIndex, e.RowIndex];
+                    if (cell?.Value != null)
+                    {
+                        if (!cell.Value.ToString().Equals(""))
+                        {
+                            Clipboard.SetText(cell.Value.ToString());
+                            new ToolTip().Show("Value copied!", this, 3000);
+                        }
+                    }
                 }
             }
         }
