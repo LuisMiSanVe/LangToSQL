@@ -7,7 +7,7 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <ApplicationIcon>Resources\icon.ico</ApplicationIcon>
-    <AssemblyName>GeminiPostSQL</AssemblyName>
+    <AssemblyName>LangToSQL</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>

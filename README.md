@@ -1,8 +1,8 @@
-> [See in spanish/Ver en español](https://github.com/LuisMiSanVe/GeminiPostSQL/blob/main/README.es.md)
+> [See in spanish/Ver en español](https://github.com/LuisMiSanVe/LangToSQL/blob/main/README.es.md)
 
-<img src="https://github.com/LuisMiSanVe/LuisMiSanVe/blob/main/Resources/GeminiPostSQL/GeminiPostSQL_banner.png" style="width: 100%; height: auto;" alt="GeminiPostSQL Banner">
+<img src="https://github.com/LuisMiSanVe/LuisMiSanVe/blob/main/Resources/LangToSQL/LangToSQL_banner.png" style="width: 100%; height: auto;" alt="LangToSQL Banner">
 
-# <img src="https://github.com/LuisMiSanVe/GeminiPostSQL/blob/main/AiPostgreWinForms/Resources/icon.ico" width="40" alt="GeminiPostSQL Logo"> GeminiPostSQL | AI-Assisted WinForms for PostgreSQL
+# <img src="https://github.com/LuisMiSanVe/LangToSQL/blob/main/AiPostgreWinForms/Resources/icon.ico" width="40" alt="LangToSQL Logo"> LangToSQL | AI-Assisted WinForms for PostgreSQL
 [![image](https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=csharp&logoColor=white)](https://dotnet.microsoft.com/en-us/languages/csharp)
 [![image](https://img.shields.io/badge/.NET-5C2D91?style=for-the-badge&logo=.net&logoColor=white)](https://dotnet.microsoft.com/en-us/learn/dotnet/what-is-dotnet)
 [![image](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
@@ -12,10 +12,11 @@
 
 >[!NOTE]
 > Check out other versions of this program:
->- [REST API](https://github.com/LuisMiSanVe/GeminiPostSQL_API/tree/main) 
->- [ChatBot](https://github.com/LuisMiSanVe/GeminiPostSQL_ChatBot/tree/main)
->- [NuGet](https://github.com/LuisMiSanVe/GeminiPostSQL_NuGet/tree/main)
+>- [REST API](https://github.com/LuisMiSanVe/LangToSQL_API/tree/main) 
+>- [ChatBot](https://github.com/LuisMiSanVe/LangToSQL_ChatBot/tree/main)
+>- [NuGet](https://github.com/LuisMiSanVe/LangToSQL_NuGet/tree/main)
 >- [Android](https://github.com/LuisMiSanVe/GeminiLiteSQL/tree/main)
+>- [LLM](https://github.com/LuisMiSanVe/LangToSQL_LLM/tree/main)
 
 This WinForms program uses Google's AI 'Gemini 2.0 Flash' to make queries to PostgreSQL databases.  
 The AI interprets natural language into SQL queries using one method, with its pros and cons.
@@ -30,6 +31,8 @@ To make this program work, you'll need a PostgreSQL Server and a Gemini API Key.
 If you don't have it, download [pgAdmin 4 from the official website](https://www.pgadmin.org/download/).  
 Now, create the PostgreSQL Server and set up a database with a few tables and insert values.
 
+You can use either a Gemini API key or use a local LLM Server, I recommend using [LM Studio](https://lmstudio.ai/).
+
 Next, obtain your Gemini API Key by visiting [Google AI Studio](https://aistudio.google.com/app/apikey). Ensure you are logged into your Google account, then press the blue button that says 'Create API key' and follow the steps to set up your Google Cloud Project and retrieve your API key. **Make sure to save it in a safe place**.  
 Google allows free use of this API without adding billing information, but there are some limitations.
 
@@ -39,9 +42,9 @@ You now have everything needed to make the program work.
 Simply put that data you just got into the setting windows in the program.
 
 ## 📖 About the WinForms program
-The interface have a few buttons, being <img src="https://github.com/LuisMiSanVe/GeminiPostSQL/blob/main/AiPostgreWinForms/Resources/key.png" width="20" alt="API Key Settings"> and <img src="https://github.com/LuisMiSanVe/GeminiPostSQL/blob/main/AiPostgreWinForms/Resources/db.png" width="20" alt="Database Settings"> setting windows, for configuring the API Key and the database respectively and <img src="https://github.com/LuisMiSanVe/GeminiPostSQL/blob/main/AiPostgreWinForms/Resources/show.png" width="20" alt="Show SQL">/<img src="https://github.com/LuisMiSanVe/GeminiPostSQL/blob/main/AiPostgreWinForms/Resources/hide.png" width="20" alt="Hide SQL"> to show or hide the AI's generated query.
+The interface have a few buttons, being <img src="https://github.com/LuisMiSanVe/LangToSQL/blob/main/AiPostgreWinForms/Resources/key.png" width="20" alt="API Key Settings"> and <img src="https://github.com/LuisMiSanVe/LangToSQL/blob/main/AiPostgreWinForms/Resources/db.png" width="20" alt="Database Settings"> setting windows, for configuring the API Key and the database respectively and <img src="https://github.com/LuisMiSanVe/LangToSQL/blob/main/AiPostgreWinForms/Resources/show.png" width="20" alt="Show SQL">/<img src="https://github.com/LuisMiSanVe/LangToSQL/blob/main/AiPostgreWinForms/Resources/hide.png" width="20" alt="Hide SQL"> to show or hide the AI's generated query.
 
-The <img src="https://github.com/LuisMiSanVe/GeminiPostSQL/blob/main/AiPostgreWinForms/Resources/map.png" width="20" alt="Map DB"> button displays a Mapped Databases Manager, where you can Map into JSON any database you want and select one for future requests to the AI. 
+The <img src="https://github.com/LuisMiSanVe/LangToSQL/blob/main/AiPostgreWinForms/Resources/map.png" width="20" alt="Map DB"> button displays a Mapped Databases Manager, where you can Map into JSON any database you want and select one for future requests to the AI. 
 
 These Mapped Databases are stored in your drive so they will always be loaded when you start the program. 
 
@@ -75,6 +78,7 @@ The version number will follow this format: \
 - Other:
   - [PostgreSQL](https://www.postgresql.org/) (16.3)
   - [pgAdmin 4](https://www.pgadmin.org/) (8.9)
+  - [LM Studio](https://lmstudio.ai/)
   - Gemini API Key (2.0 Flash)
   - Loading screen design by [my wife](https://github.com/meowwan)
   - Images (Icons source, later retouched by me):

@@ -16,7 +16,7 @@ namespace AiPostgreWinForms
     {
         // Gemini API Data
         public static string endpoint = "https://generativelanguage.googleapis.com"; // Resource
-        public static string uri = "/v1beta/models/gemini-2.0-flash:generateContent?key="; // Model URI
+        public static string uri = "/v1beta/models/gemini-2.5-flash:generateContent?key="; // Model URI
         public static string apikey = ""; // API Key
 
         // Database Data
@@ -29,6 +29,7 @@ namespace AiPostgreWinForms
 
         // Other Data
         public static string currentmap = "";
+        public static string currentai = "";
 
         public FrmAiPostgre()
         {
@@ -50,6 +51,8 @@ namespace AiPostgreWinForms
                     File.Delete("apisettings.conf");
                 if (File.Exists("dbsettings.conf"))
                     File.Delete("dbsettings.conf");
+                if (File.Exists("aisettings.conf"))
+                    File.Delete("aisettings.conf");
                 if (Directory.Exists("MappedDB"))
                     Directory.Delete("MappedDB");
             }
@@ -88,24 +91,25 @@ namespace AiPostgreWinForms
                     if (currentmap != "")
                         if (lv_maps.Items[i].Text == currentmap)
                         {
-                            lv_maps.Items[i].BackColor = Color.FromArgb(255, 142, 188, 237); //8EBCED
-                            lv_maps.Items[i].ForeColor = Color.FromArgb(255, 182, 13, 216); //B60DD8
+                            lv_maps.Items[i].BackColor = Color.FromArgb(255, 86, 240, 255); //56F0FF
+                            lv_maps.Items[i].ForeColor = Color.FromArgb(255, 88, 76, 246); //584CF6
                         }
                 }
             }
-        }
 
-        private void llbl_github_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            // Opens default browser with the Github profile
-            try
+            // Load the current AI selection
+            if (File.Exists("aisettings.conf"))
             {
-                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo { FileName = "https://github.com/LuisMiSanVe", UseShellExecute = true });
+                string aisettings = Decrypt(File.ReadAllText("aisettings.conf"));
+                currentai = aisettings.Split('\n')[0];
+                txt_LlmUrl.Text = aisettings.Split('\n')[1];
+                txtLlmModel.Text = aisettings.Split('\n')[2];
+
+                if (currentai.Equals("LLM"))
+                    rdbtn_LLM.Checked = true;
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show("The following error happened while trying to open your default browser:\r\n" + ex.Message, "Error while opening your default internet browser", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            else
+                currentai = "Gemini";
         }
 
         private void btn_showquery_Click(object sender, EventArgs e)
@@ -140,7 +144,6 @@ namespace AiPostgreWinForms
             tb_aiquery.Enabled = false;
             tb_userrequest.Enabled = false;
             dgv_airesult.Enabled = false;
-            llbl_github.Enabled = false;
             btn_tweak.Enabled = false;
             Btn_Copy.Enabled = false;
             btn_mapdb.Enabled = false;
@@ -158,7 +161,6 @@ namespace AiPostgreWinForms
             tb_aiquery.Enabled = false;
             tb_userrequest.Enabled = false;
             dgv_airesult.Enabled = false;
-            llbl_github.Enabled = false;
             btn_tweak.Enabled = false;
             Btn_Copy.Enabled = false;
             btn_mapdb.Enabled = false;
@@ -166,29 +168,34 @@ namespace AiPostgreWinForms
 
         private void btn_saveapi_Click(object sender, EventArgs e)
         {
-            if (Regex.Match(tx_apikey.Text, "^AIza[0-9A-Za-z_-]{35}$").Success)
+            if (rdbtn_Gemini.Checked)
             {
-                // Saves the value and closes the settings
-                apikey = tx_apikey.Text;
-                if (ckbx_remember.Checked)
-                    File.WriteAllText("apisettings.conf", Encrypt(apikey));
-
-                gb_key.Visible = false;
-
-                // Enables the functionality of the rest of the program
-                btn_dbsettings.Enabled = true;
-                btn_showquery.Enabled = true;
-                btn_send.Enabled = true;
-                tb_aiquery.Enabled = true;
-                tb_userrequest.Enabled = true;
-                dgv_airesult.Enabled = true;
-                llbl_github.Enabled = true;
-                btn_tweak.Enabled = true;
-                Btn_Copy.Enabled = true;
-                btn_mapdb.Enabled = true;
+                if (Regex.Match(tx_apikey.Text, "^AIza[0-9A-Za-z_-]{35}$").Success)
+                {
+                    apikey = tx_apikey.Text;
+                    if (ckbx_remember.Checked)
+                        File.WriteAllText("apisettings.conf", Encrypt(apikey));
+                }
+                else
+                    MessageBox.Show("The API Key provided doesn't match with a Google API Key.", "API Key doesn't match the format", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-            else
-                MessageBox.Show("The API Key provided doesn't match with a Google API Key.", "API Key doesn't match the format", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+            if (currentai.Equals(""))
+                currentai = "Gemini";
+            File.WriteAllText("aisettings.conf", Encrypt(currentai + "\n" + txt_LlmUrl.Text + "\n" + txtLlmModel.Text));
+
+            gb_key.Visible = false;
+
+            // Enables the functionality of the rest of the program
+            btn_dbsettings.Enabled = true;
+            btn_showquery.Enabled = true;
+            btn_send.Enabled = true;
+            tb_aiquery.Enabled = true;
+            tb_userrequest.Enabled = true;
+            dgv_airesult.Enabled = true;
+            btn_tweak.Enabled = true;
+            Btn_Copy.Enabled = true;
+            btn_mapdb.Enabled = true;
         }
 
         private void btn_savedb_Click(object sender, EventArgs e)
@@ -215,7 +222,6 @@ namespace AiPostgreWinForms
                     tb_aiquery.Enabled = true;
                     tb_userrequest.Enabled = true;
                     dgv_airesult.Enabled = true;
-                    llbl_github.Enabled = true;
                     btn_tweak.Enabled = true;
                     Btn_Copy.Enabled = true;
                     btn_mapdb.Enabled = true;
@@ -387,51 +393,119 @@ namespace AiPostgreWinForms
                                                      json +
                                                      "\nAnd this is my request: ";
 
-                                    // I create the request
-                                    var Client = new RestClient(endpoint);
-                                    var request = new RestRequest(uri + apikey, Method.Post);
-                                    request.AddHeader("Content-Type", "application/json");
-
-                                    var body = new AIRequest();
-                                    body.contents = new Content[] { new Content() { parts = new Part[] { new Part() { text = context + tb_userrequest.Text } } } };
-
-                                    var jsonstring = JsonConvert.SerializeObject(body);
-
-                                    request.AddJsonBody(jsonstring);
-                                    // Sends the request to the service
+                                    // AI Request
                                     string generatedSql = "";
-                                    lbl_loadstatus.Invoke((MethodInvoker)(() =>
+                                    if (currentai.Equals("Gemini"))
                                     {
-                                        lbl_loadstatus.Text = "Generating...";
-                                    }));
-                                    try
-                                    {
-                                        var response = Client.Post(request);
-                                        var resp = JsonDocument.Parse(response.Content);
-                                        // It extracts the AI's response from the 'Text' field                                                                                      and I remove the SQL Code style the AI adds
-                                        generatedSql = resp.RootElement.GetProperty("candidates")[0].GetProperty("content").GetProperty("parts")[0].GetProperty("text").GetString().Replace("```sql", "").Replace("```", "").Replace('\n', ' ').Trim();
-                                        generatedSql = Regex.Replace(generatedSql, @"\s+", " ");
-                                        tb_aiquery.Invoke((MethodInvoker)(() =>
+                                        var Client = new RestClient(endpoint);
+                                        var request = new RestRequest(uri + apikey, Method.Post);
+                                        request.AddHeader("Content-Type", "application/json");
+
+                                        var body = new AIRequest();
+                                        body.contents = new Content[] { new Content() { parts = new Part[] { new Part() { text = context + tb_userrequest.Text } } } };
+
+                                        var jsonstring = JsonConvert.SerializeObject(body);
+
+                                        request.AddJsonBody(jsonstring);
+
+                                        // Sends the request to the service
+                                        lbl_loadstatus.Invoke((MethodInvoker)(() =>
                                         {
-                                            tb_aiquery.Text = generatedSql;
+                                            lbl_loadstatus.Text = "Generating...";
                                         }));
-                                    }
-                                    catch (HttpRequestException ex)
-                                    {
-                                        MessageBox.Show("The provided Gemini API Key has failed to access the endpoint, make sure the API Key or Service is functional", "API Key failed (" + ex.StatusCode + ")", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                                        gb_key.Invoke((MethodInvoker)(() =>
+                                        try
                                         {
-                                            btn_keysettings_Click(null, null);
-                                        }));
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        MessageBox.Show("The provided Gemini API Key has failed to access the endpoint, make sure the API Key or Service is functional", "API Key failed (" + ex.Message + ")", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                                        gb_key.Invoke((MethodInvoker)(() =>
+                                            var response = Client.Post(request);
+                                            var resp = JsonDocument.Parse(response.Content);
+                                            // It extracts the AI's response from the 'Text' field                                                                                      and I remove the SQL Code style the AI adds
+                                            generatedSql = resp.RootElement.GetProperty("candidates")[0].GetProperty("content").GetProperty("parts")[0].GetProperty("text").GetString().Replace("```sql", "").Replace("```", "").Replace('\n', ' ').Trim();
+                                            generatedSql = Regex.Replace(generatedSql, @"\s+", " ");
+                                            tb_aiquery.Invoke((MethodInvoker)(() =>
+                                            {
+                                                tb_aiquery.Text = generatedSql;
+                                            }));
+                                        }
+                                        catch (HttpRequestException ex)
                                         {
-                                            btn_keysettings_Click(null, null);
-                                        }));
+                                            MessageBox.Show("The provided Gemini API Key has failed to access the endpoint, make sure the API Key or Service is functional", "API Key failed (" + ex.StatusCode + ")", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                            gb_key.Invoke((MethodInvoker)(() =>
+                                            {
+                                                btn_keysettings_Click(null, null);
+                                            }));
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            MessageBox.Show("The provided Gemini API Key has failed to access the endpoint, make sure the API Key or Service is functional", "API Key failed (" + ex.Message + ")", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                            gb_key.Invoke((MethodInvoker)(() =>
+                                            {
+                                                btn_keysettings_Click(null, null);
+                                            }));
+                                        }
                                     }
+                                    else if (currentai.Equals("LLM"))
+                                    {
+                                        var Client = new RestClient(txt_LlmUrl.Text);
+                                        var request = new RestRequest("/v1/chat/completions", Method.Post);
+                                        request.AddHeader("Content-Type", "application/json");
+
+                                        var body = new
+                                        {
+                                            model = txtLlmModel.Text,
+                                            messages = new[]
+                                            {
+                                                new
+                                                {
+                                                    role = "user",
+                                                    content = context + tb_userrequest.Text
+                                                }
+                                            },
+                                            temperature = 0.2,
+                                            max_tokens = 512
+                                        };
+
+                                        request.AddJsonBody(body);
+
+                                        lbl_loadstatus.Invoke((MethodInvoker)(() =>
+                                        {
+                                            lbl_loadstatus.Text = "Generating...";
+                                        }));
+
+                                        try
+                                        {
+                                            var response = Client.Post(request);
+
+                                            if (!response.IsSuccessful)
+                                                throw new Exception(response.Content ?? response.ErrorMessage);
+
+                                            var resp = JsonDocument.Parse(response.Content);
+
+                                            generatedSql = resp.RootElement
+                                                .GetProperty("choices")[0]
+                                                .GetProperty("message")
+                                                .GetProperty("content")
+                                                .GetString()?
+                                                .Replace("```sql", "")
+                                                .Replace("```", "")
+                                                .Replace('\n', ' ')
+                                                .Trim();
+
+                                            generatedSql = Regex.Replace(generatedSql ?? "", @"\s+", " ");
+
+                                            tb_aiquery.Invoke((MethodInvoker)(() =>
+                                            {
+                                                tb_aiquery.Text = generatedSql;
+                                            }));
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            MessageBox.Show("LM Studio failed at answering. Ensure LM Studio is running and a model is loaded.\nCheck LM Studio's Server Console, if the call reached the server but didn't process, it's possible that your database is bigger than what your hardware can handle, please try to use Gemini instead.", "LM Studio Error (" + ex.Message + ")", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                            gb_key.Invoke((MethodInvoker)(() =>
+                                            {
+                                                btn_keysettings_Click(null, null);
+                                            }));
+                                        }
+                                    }
+                                    // Execute the generated query
                                     // Disables the loading screen
                                     gb_loading.Invoke((MethodInvoker)(() =>
                                     {
@@ -571,7 +645,6 @@ namespace AiPostgreWinForms
             tb_aiquery.Enabled = true;
             tb_userrequest.Enabled = true;
             dgv_airesult.Enabled = true;
-            llbl_github.Enabled = true;
             btn_tweak.Enabled = true;
             Btn_Copy.Enabled = true;
             btn_mapdb.Enabled = true;
@@ -591,7 +664,6 @@ namespace AiPostgreWinForms
             tb_aiquery.Enabled = true;
             tb_userrequest.Enabled = true;
             dgv_airesult.Enabled = true;
-            llbl_github.Enabled = true;
             btn_tweak.Enabled = true;
             Btn_Copy.Enabled = true;
             btn_mapdb.Enabled = true;
@@ -716,7 +788,6 @@ namespace AiPostgreWinForms
             tb_aiquery.Enabled = false;
             tb_userrequest.Enabled = false;
             dgv_airesult.Enabled = false;
-            llbl_github.Enabled = false;
             btn_tweak.Enabled = false;
             Btn_Copy.Enabled = false;
         }
@@ -733,7 +804,6 @@ namespace AiPostgreWinForms
             tb_aiquery.Enabled = true;
             tb_userrequest.Enabled = true;
             dgv_airesult.Enabled = true;
-            llbl_github.Enabled = true;
             btn_tweak.Enabled = true;
             Btn_Copy.Enabled = true;
         }
@@ -887,8 +957,8 @@ namespace AiPostgreWinForms
                         item.BackColor = Color.White;
                         item.ForeColor = Color.Black;
                     }
-                    lv_maps.FocusedItem.BackColor = Color.FromArgb(255, 142, 188, 237); //8EBCED
-                    lv_maps.FocusedItem.ForeColor = Color.FromArgb(255, 182, 13, 216); //B60DD8
+                    lv_maps.FocusedItem.BackColor = Color.FromArgb(255, 86, 240, 255); //56F0FF
+                    lv_maps.FocusedItem.ForeColor = Color.FromArgb(255, 88, 76, 246); //584CF6
 
                     currentmap = lv_maps.FocusedItem.Text;
 
@@ -975,6 +1045,24 @@ namespace AiPostgreWinForms
                         }
                     }
                 }
+            }
+        }
+
+        private void rdbtn_Gemini_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rdbtn_Gemini.Checked)
+            {
+                gb_Gemini.Enabled = true;
+                gb_LLM.Enabled = false;
+
+                currentai = "Gemini";
+            }
+            else if (rdbtn_LLM.Checked)
+            {
+                gb_Gemini.Enabled = false;
+                gb_LLM.Enabled = true;
+
+                currentai = "LLM";
             }
         }
     }

@@ -1,8 +1,8 @@
-> [Ver en ingles/See in english](https://github.com/LuisMiSanVe/GeminiPostSQL/tree/main)
+> [Ver en ingles/See in english](https://github.com/LuisMiSanVe/LangToSQL/tree/main)
 
-<img src="https://github.com/LuisMiSanVe/LuisMiSanVe/blob/main/Resources/GeminiPostSQL/GeminiPostSQL_banner.png" style="width: 100%; height: auto;" alt="GeminiPostSQL Banner">
+<img src="https://github.com/LuisMiSanVe/LuisMiSanVe/blob/main/Resources/LangToSQL/LangToSQL_banner.png" style="width: 100%; height: auto;" alt="LangToSQL Banner">
 
-# <img src="https://github.com/LuisMiSanVe/GeminiPostSQL/blob/main/AiPostgreWinForms/Resources/icon.ico" width="40" alt="Logo de GeminiPostSQL"> GeminiPostSQL | WinForms Asistido por IA para PostgreSQL
+# <img src="https://github.com/LuisMiSanVe/LangToSQL/blob/main/AiPostgreWinForms/Resources/icon.ico" width="40" alt="Logo de LangToSQL"> LangToSQL | WinForms Asistido por IA para PostgreSQL
 [![image](https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=csharp&logoColor=white)](https://dotnet.microsoft.com/en-us/languages/csharp)
 [![image](https://img.shields.io/badge/.NET-5C2D91?style=for-the-badge&logo=.net&logoColor=white)](https://dotnet.microsoft.com/en-us/learn/dotnet/what-is-dotnet)
 [![image](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
@@ -12,25 +12,26 @@
 
 >[!NOTE]
 > Dale un vistazo a las otras versiones del programa:
->- [REST API](https://github.com/LuisMiSanVe/GeminiPostSQL_API/tree/main) 
->- [ChatBot](https://github.com/LuisMiSanVe/GeminiPostSQL_ChatBot/tree/main)
->- [NuGet](https://github.com/LuisMiSanVe/GeminiPostSQL_NuGet/tree/main)
+>- [REST API](https://github.com/LuisMiSanVe/LangToSQL_API/tree/main) 
+>- [ChatBot](https://github.com/LuisMiSanVe/LangToSQL_ChatBot/tree/main)
+>- [NuGet](https://github.com/LuisMiSanVe/LangToSQL_NuGet/tree/main)
 >- [Android](https://github.com/LuisMiSanVe/GeminiLiteSQL/tree/main)
+>- [LLM](https://github.com/LuisMiSanVe/LangToSQL_LLM/tree/main)
 
 Este WinForms usa la IA de Google 'Gemini 2.0 Flash' para generar consultas a bases de datos PostgreSQL.  
 La IA convierte lenguaje natural a consultas SQL usando un método con sus ventajas y desventajas.
 
 ## 📋 Prerequisitos
-
 Para que el programa funcione, necesiatarás un servidor PostgreSQL y una clave de la API de Gemini.
 
 > [!NOTE]  
 > Yo usaré pgAdmin para montar el servidor PostgreSQL.
 
 ## 🛠️ Instalación
-
 En caso de no tenerlo, deberás descargar [pgAdmin 4 desde su página ofical](https://www.pgadmin.org/download/).  
 Ahora, crea el servidor y monta la base de datos con algunas tablas y valores.
+
+Puedes usar o bien una clave de API de Gemini o un servidor local de LLM, para ello recomiendo [LM Studio](https://lmstudio.ai/).
 
 Después, obten tu clave de la API de Gemini yendo aquí: [Google AI Studio](https://aistudio.google.com/app/apikey). Asegúrate de tener tu sesión de Google abierta, y entonces dale al botón que dice 'Crear clave de API' y sigue los pasos para crear tu proyecto de Google Cloud y conseguir tu clave de API. **Guárdala en algún sitio seguro**.  
 Google permite el uso gratuito de esta API sin añadir ninguna forma de pago, pero con algunas limitaciones.
@@ -41,9 +42,9 @@ Ya tienes todo lo que necesitas para hacer funcionar el programa.
 Simplemente pon los datos que acabas de conseguir en las pantallas de configuración del programa.
 
 ## 📖 Sobre el programa de WinForms
-La interfaz tiene unos cuantos botones, siendo <img src="https://github.com/LuisMiSanVe/GeminiPostSQL/blob/main/AiPostgreWinForms/Resources/key.png" width="20" alt="API Key Settings"> y <img src="https://github.com/LuisMiSanVe/GeminiPostSQL/blob/main/AiPostgreWinForms/Resources/db.png" width="20" alt="Database Settings"> las pantallas de configuración, de la clave de la API y la base de datos respectivamente y <img src="https://github.com/LuisMiSanVe/GeminiPostSQL/blob/main/AiPostgreWinForms/Resources/show.png" width="20" alt="Show SQL">/<img src="https://github.com/LuisMiSanVe/GeminiPostSQL/blob/main/AiPostgreWinForms/Resources/hide.png" width="20" alt="Hide SQL"> para mostrar u ocultar la consulta creada por la IA.
+La interfaz tiene unos cuantos botones, siendo <img src="https://github.com/LuisMiSanVe/LangToSQL/blob/main/AiPostgreWinForms/Resources/key.png" width="20" alt="API Key Settings"> y <img src="https://github.com/LuisMiSanVe/LangToSQL/blob/main/AiPostgreWinForms/Resources/db.png" width="20" alt="Database Settings"> las pantallas de configuración, de la clave de la API y la base de datos respectivamente y <img src="https://github.com/LuisMiSanVe/LangToSQL/blob/main/AiPostgreWinForms/Resources/show.png" width="20" alt="Show SQL">/<img src="https://github.com/LuisMiSanVe/LangToSQL/blob/main/AiPostgreWinForms/Resources/hide.png" width="20" alt="Hide SQL"> para mostrar u ocultar la consulta creada por la IA.
 
-El botón <img src="https://github.com/LuisMiSanVe/GeminiPostSQL/blob/main/AiPostgreWinForms/Resources/map.png" width="20" alt="Map DB"> saca un Gestor de Bases de Datos Mapeadas, en el que puedes Mapear a JSON cualquier base de datos que quieras y seleccionarla para usarla en futuras solicitudes a la IA. 
+El botón <img src="https://github.com/LuisMiSanVe/LangToSQL/blob/main/AiPostgreWinForms/Resources/map.png" width="20" alt="Map DB"> saca un Gestor de Bases de Datos Mapeadas, en el que puedes Mapear a JSON cualquier base de datos que quieras y seleccionarla para usarla en futuras solicitudes a la IA. 
 
 Estas Bases de Datos Mapeadas se guardan en tu disco por lo que siempre se cargarán al iniciar el programa. 
 
@@ -77,8 +78,11 @@ El número de la versión seguirá este formato: \
 - Otros:
   - [PostgreSQL](https://www.postgresql.org/) (16.3)
   - [pgAdmin 4](https://www.pgadmin.org/) (8.9)
+  - [LM Studio](https://lmstudio.ai/)
   - Gemini API Key (2.0 Flash)
   - Pantalla de carga diseñada por [mi esposa](https://github.com/meowwan)
-  - [FreeIcons](https://freeicons.io/) (Fuente original de los iconos, luego retocados por mí)
+  - Imagenes (Fuente de los iconos, luego retocados por mi):
+    - [FreeIcons](https://freeicons.io/)
+    - [Depositphotos](https://depositphotos.com/vector/coarse-halftone-dots-pattern-gradient-in-vector-format-82396024.html)
   - [Microsoft Visual Studio Installer Projects 2022](https://marketplace.visualstudio.com/items?itemName=VisualStudioClient.MicrosoftVisualStudio2022InstallerProjects) (2.0.1)
 - IDE Recomendado: [Visual Studio](https://visualstudio.microsoft.com/) 2022
