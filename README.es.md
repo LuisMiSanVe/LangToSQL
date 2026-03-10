@@ -18,7 +18,7 @@
 >- [Android](https://github.com/LuisMiSanVe/GeminiLiteSQL/tree/main)
 >- [LLM](https://github.com/LuisMiSanVe/LangToSQL_LLM/tree/main)
 
-Este WinForms usa la IA de Google 'Gemini 2.0 Flash' para generar consultas a bases de datos PostgreSQL.  
+Este WinForms usa la IA de Google 'Gemini 2.5 Flash' para generar consultas a bases de datos PostgreSQL.  
 La IA convierte lenguaje natural a consultas SQL usando un método con sus ventajas y desventajas.
 
 ## 📋 Prerequisitos
@@ -79,7 +79,7 @@ El número de la versión seguirá este formato: \
   - [PostgreSQL](https://www.postgresql.org/) (16.3)
   - [pgAdmin 4](https://www.pgadmin.org/) (8.9)
   - [LM Studio](https://lmstudio.ai/)
-  - Gemini API Key (2.0 Flash)
+  - Gemini API Key (2.5 Flash)
   - Pantalla de carga diseñada por [mi esposa](https://github.com/meowwan)
   - Imagenes (Fuente de los iconos, luego retocados por mi):
     - [FreeIcons](https://freeicons.io/)
