@@ -4,11 +4,12 @@ using Npgsql;
 using RestSharp;
 using System.Data;
 using System.Linq.Expressions;
-using System.Text.Json;
-using System.Text.RegularExpressions;
 using System.Management;
+using System.Runtime;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
+using System.Text.RegularExpressions;
 
 namespace AiPostgreWinForms
 {
@@ -64,6 +65,8 @@ namespace AiPostgreWinForms
                 tx_apikey.Text = Decrypt(File.ReadAllText("apisettings.conf"));
                 apikey = tx_apikey.Text;
             }
+            else
+                tx_apikey.Text = apikey;
 
             // Load latest saved DB settings
             if (File.Exists("dbsettings.conf"))
@@ -107,9 +110,15 @@ namespace AiPostgreWinForms
 
                 if (currentai.Equals("LLM"))
                     rdbtn_LLM.Checked = true;
+                else
+                    rdbtn_Gemini.Checked = true;
             }
             else
-                currentai = "Gemini";
+            {
+                rdbtn_Gemini.Checked = true;
+                txt_LlmUrl.Text = "";
+                txtLlmModel.Text = "";
+            }
         }
 
         private void btn_showquery_Click(object sender, EventArgs e)
@@ -1014,8 +1023,8 @@ namespace AiPostgreWinForms
         {
             if (lv_maps.FocusedItem != null)
             {
-                if (lv_maps.FocusedItem.BackColor == Color.FromArgb(255, 142, 188, 237) &&
-                    lv_maps.FocusedItem.ForeColor == Color.FromArgb(255, 182, 13, 216) &&
+                if (lv_maps.FocusedItem.BackColor == Color.FromArgb(255, 86, 240, 255) &&
+                    lv_maps.FocusedItem.ForeColor == Color.FromArgb(255, 88, 76, 246) &&
                     json != "")
                 {
                     btn_selectmap.BackgroundImage = il_selectimages.Images[1];
