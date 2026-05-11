@@ -5,8 +5,6 @@ VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AiPostgreWinForms", "AiPostgreWinForms.csproj", "{9C9573E2-0D0A-48D6-9CD6-3FF1BEB29C3F}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup", "..\Setup\Setup.vdproj", "{D798408B-316C-4D9D-9014-5330859AEC53}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,8 +15,6 @@ Global
 		{9C9573E2-0D0A-48D6-9CD6-3FF1BEB29C3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9C9573E2-0D0A-48D6-9CD6-3FF1BEB29C3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9C9573E2-0D0A-48D6-9CD6-3FF1BEB29C3F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D798408B-316C-4D9D-9014-5330859AEC53}.Debug|Any CPU.ActiveCfg = Debug
-		{D798408B-316C-4D9D-9014-5330859AEC53}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
