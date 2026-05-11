@@ -81,6 +81,7 @@
             lbl_loadstatus = new Label();
             pcbx_loadinggif = new PictureBox();
             gb_map = new GroupBox();
+            chkbx_useMap = new CheckBox();
             lbl_mapprogress = new Label();
             lv_maps = new ListView();
             pcbx_background = new PictureBox();
@@ -675,6 +676,7 @@
             // 
             // gb_map
             // 
+            gb_map.Controls.Add(chkbx_useMap);
             gb_map.Controls.Add(lbl_mapprogress);
             gb_map.Controls.Add(btn_deletemap);
             gb_map.Controls.Add(btn_selectmap);
@@ -688,6 +690,20 @@
             gb_map.TabStop = false;
             gb_map.Text = "Mapped Databases";
             gb_map.Visible = false;
+            // 
+            // chkbx_useMap
+            // 
+            chkbx_useMap.AutoSize = true;
+            chkbx_useMap.CheckAlign = ContentAlignment.MiddleRight;
+            chkbx_useMap.Checked = true;
+            chkbx_useMap.CheckState = CheckState.Checked;
+            chkbx_useMap.Location = new Point(315, 249);
+            chkbx_useMap.Name = "chkbx_useMap";
+            chkbx_useMap.Size = new Size(171, 29);
+            chkbx_useMap.TabIndex = 7;
+            chkbx_useMap.Text = "Use context map";
+            chkbx_useMap.UseVisualStyleBackColor = true;
+            chkbx_useMap.CheckedChanged += chkbx_useMap_CheckedChanged;
             // 
             // lbl_mapprogress
             // 
@@ -832,5 +848,6 @@
         private GroupBox gb_Gemini;
         private Label lblLlmModel;
         private TextBox txtLlmModel;
+        private CheckBox chkbx_useMap;
     }
 }

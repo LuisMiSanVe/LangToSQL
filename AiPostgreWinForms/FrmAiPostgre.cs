@@ -79,6 +79,11 @@ namespace AiPostgreWinForms
                     txt_db.Text = settings[3].Substring(settings[3].IndexOf("=") + 1);
                     txt_user.Text = settings[1].Substring(settings[1].IndexOf("=") + 1);
                     txt_pass.Text = settings[2].Substring(settings[2].IndexOf("=") + 1);
+                    if (settings.Length > 4)
+                    {
+                        chkbx_useMap.Checked = bool.Parse(settings[4].Substring(settings[4].IndexOf("=") + 1));
+                        dbsettings = settings[0] + ";" + settings[1] + ";" + settings[2] + ";" + settings[3];
+                    }
                 }
                 database = dbsettings;
             }
@@ -221,7 +226,10 @@ namespace AiPostgreWinForms
                     connection.Open();
                     connection.Close();
 
-                    File.WriteAllText("dbsettings.conf", Encrypt(database));
+                    // Add use context map option
+                    string dbstt = database + ";UseMap=" + chkbx_useMap.Checked;
+
+                    File.WriteAllText("dbsettings.conf", Encrypt(dbstt));
                     gb_database.Visible = false;
 
                     // Enables the functionality of the rest of the program
@@ -293,8 +301,8 @@ namespace AiPostgreWinForms
                                         pb_loading.Value = 0; // Restart the bar value 
                                     }));
 
-                                    // If the database is already mapped, it skips the process
-                                    if (json == "")
+                                    // If the database is already mapped or the map context is disabled, it skips the process
+                                    if (json == "" && chkbx_useMap.Checked)
                                     {
                                         // OBTAIN DB
                                         // Get the quantity of tables and columns for the loading bar
@@ -396,10 +404,16 @@ namespace AiPostgreWinForms
                                             pb_loading.Value = pb_loading.Maximum;
                                         }));
                                     }
+
+                                    string dbmap = "";
+                                    if (chkbx_useMap.Checked)
+                                        dbmap = "This is the database: " + json;
+                                    else
+                                        dbmap = "I won't send you any database context, just answer based on your pre-existing knowledge.";
+
                                     // Creates context to modify AI's behavior
                                     string context = "You're a database assistant, I'll send you requests and you'll return a PostgeSQL query to do my request and if what I request can't be found on the database, tell me, but don't use more words. " +
-                                                     "This is the database: " +
-                                                     json +
+                                                     dbmap +
                                                      "\nAnd this is my request: ";
 
                                     // AI Request
@@ -488,15 +502,7 @@ namespace AiPostgreWinForms
 
                                             var resp = JsonDocument.Parse(response.Content);
 
-                                            generatedSql = resp.RootElement
-                                                .GetProperty("choices")[0]
-                                                .GetProperty("message")
-                                                .GetProperty("content")
-                                                .GetString()?
-                                                .Replace("```sql", "")
-                                                .Replace("```", "")
-                                                .Replace('\n', ' ')
-                                                .Trim();
+                                            generatedSql = resp.RootElement.GetProperty("choices")[0].GetProperty("message").GetProperty("content").GetString()?.Replace("```sql", "").Replace("```", "").Replace('\n', ' ').Trim();
 
                                             generatedSql = Regex.Replace(generatedSql ?? "", @"\s+", " ");
 
@@ -507,7 +513,7 @@ namespace AiPostgreWinForms
                                         }
                                         catch (Exception ex)
                                         {
-                                            MessageBox.Show("LM Studio failed at answering. Ensure LM Studio is running and a model is loaded.\nCheck LM Studio's Server Console, if the call reached the server but didn't process, it's possible that your database is bigger than what your hardware can handle, please try to use Gemini instead.", "LM Studio Error (" + ex.Message + ")", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                            MessageBox.Show("LM Studio failed at answering. Ensure LM Studio is running and a model is loaded.\nCheck LM Studio's Server Console, if the call reached the server but didn't process, it's possible that your database is bigger than what your hardware can handle, consider disabling map context or try to use Gemini instead.", "LM Studio Error (" + ex.Message + ")", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                                             gb_key.Invoke((MethodInvoker)(() =>
                                             {
                                                 btn_keysettings_Click(null, null);
@@ -1073,6 +1079,11 @@ namespace AiPostgreWinForms
 
                 currentai = "LLM";
             }
+        }
+
+        private void chkbx_useMap_CheckedChanged(object sender, EventArgs e)
+        {
+            btn_savedb_Click(sender,e);
         }
     }
 }
