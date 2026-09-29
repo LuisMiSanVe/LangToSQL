@@ -301,6 +301,35 @@ namespace AiPostgreWinForms
                                         pb_loading.Value = 0; // Restart the bar value 
                                     }));
 
+                                    // Check if the current database is already mapped
+                                    if (Directory.Exists("MappedDB"))
+                                    {
+                                        gb_map.Invoke((MethodInvoker)(() =>
+                                        {
+                                            btn_mapdb_Click(sender, e);
+                                            foreach (string file in Directory.GetFiles("MappedDB"))
+                                            {
+                                                if (file.Contains(txt_db.Text))
+                                                {
+                                                    var item = lv_maps.Items.Cast<ListViewItem>().FirstOrDefault(x => x.Text == txt_db.Text);
+
+                                                    if (item != null)
+                                                    {
+                                                        lv_maps.Focus();
+                                                        lv_maps.SelectedItems.Clear();
+                                                        item.Selected = true;
+                                                        item.Focused = true;
+                                                        item.EnsureVisible();
+                                                        // If so, select it
+                                                        btn_selectmap_Click(sender, e);
+                                                    }
+                                                    break;
+                                                }
+                                            }
+                                            btn_backmap_Click(sender, e);
+                                        }));
+                                    }
+
                                     // If the database is already mapped or the map context is disabled, it skips the process
                                     if (json == "" && chkbx_useMap.Checked)
                                     {
