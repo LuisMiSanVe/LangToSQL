@@ -16,8 +16,9 @@ namespace AiPostgreWinForms
     public partial class FrmAiPostgre : Form
     {
         // Gemini API Data
-        public static string endpoint = "https://generativelanguage.googleapis.com"; // Resource
-        public static string uri = "/v1beta/models/gemini-2.5-flash:generateContent?key="; // Model URI
+        public static string url = "https://generativelanguage.googleapis.com"; // Resource URL
+        public static string model = "/v1beta/models/gemini-"; // Model URL
+        public static string endpoint = ":generateContent?key="; // Endpoint URL
         public static string apikey = ""; // API Key
 
         // Database Data
@@ -124,6 +125,8 @@ namespace AiPostgreWinForms
                 txt_LlmUrl.Text = "";
                 txtLlmModel.Text = "";
             }
+
+            cmbx_models.SelectedIndex = 0;
         }
 
         private void btn_showquery_Click(object sender, EventArgs e)
@@ -449,8 +452,8 @@ namespace AiPostgreWinForms
                                     string generatedSql = "";
                                     if (currentai.Equals("Gemini"))
                                     {
-                                        var Client = new RestClient(endpoint);
-                                        var request = new RestRequest(uri + apikey, Method.Post);
+                                        var Client = new RestClient(url);
+                                        var request = new RestRequest(model + cmbx_models.Text + endpoint + apikey, Method.Post);
                                         request.AddHeader("Content-Type", "application/json");
 
                                         var body = new AIRequest();
@@ -580,6 +583,8 @@ namespace AiPostgreWinForms
                                             btn_showquery.Invoke((MethodInvoker)(() =>
                                             {
                                                 btn_showquery_Click(sender, e);
+                                                gb_loading.Visible = false;
+                                                gb_loading.Dock = DockStyle.None;
                                             }));
                                     }
                                 }
@@ -589,6 +594,8 @@ namespace AiPostgreWinForms
                                     btn_dbsettings.Invoke((MethodInvoker)(() =>
                                     {
                                         btn_dbsettings_Click(sender, e);
+                                        gb_loading.Visible = false;
+                                        gb_loading.Dock = DockStyle.None;
                                     }));
                                 }
                             }
@@ -598,6 +605,8 @@ namespace AiPostgreWinForms
                                 btn_dbsettings.Invoke((MethodInvoker)(() =>
                                 {
                                     btn_dbsettings_Click(sender, e);
+                                    gb_loading.Visible = false;
+                                    gb_loading.Dock = DockStyle.None;
                                 }));
                             }
                         });
@@ -1097,6 +1106,7 @@ namespace AiPostgreWinForms
             if (rdbtn_Gemini.Checked)
             {
                 gb_Gemini.Enabled = true;
+                cmbx_models.Enabled = true;
                 gb_LLM.Enabled = false;
 
                 currentai = "Gemini";
@@ -1104,6 +1114,7 @@ namespace AiPostgreWinForms
             else if (rdbtn_LLM.Checked)
             {
                 gb_Gemini.Enabled = false;
+                cmbx_models.Enabled = false;
                 gb_LLM.Enabled = true;
 
                 currentai = "LLM";

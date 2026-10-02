@@ -18,11 +18,11 @@
 >- [Android](https://github.com/LuisMiSanVe/GeminiLiteSQL/tree/main)
 >- [LLM](https://github.com/LuisMiSanVe/LangToSQL_LLM/tree/main)
 
-Este WinForms usa la IA de Google 'Gemini 2.5 Flash' para generar consultas a bases de datos PostgreSQL.  
+Este WinForms usa la IA como la de Google 'Gemini' o cualquier otra LLM para generar consultas a bases de datos PostgreSQL.  
 La IA convierte lenguaje natural a consultas SQL usando un método con sus ventajas y desventajas.
 
 ## 📋 Prerequisitos
-Para que el programa funcione, necesiatarás un servidor PostgreSQL y una clave de la API de Gemini.
+Para que el programa funcione, necesiatarás un servidor PostgreSQL y una clave de la API de Gemini/servidor local de LLM.
 
 > [!NOTE]  
 > Yo usaré pgAdmin para montar el servidor PostgreSQL.

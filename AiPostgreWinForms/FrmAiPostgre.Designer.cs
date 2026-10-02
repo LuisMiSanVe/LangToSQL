@@ -86,6 +86,7 @@
             lv_maps = new ListView();
             pcbx_background = new PictureBox();
             il_selectimages = new ImageList(components);
+            cmbx_models = new ComboBox();
             ((System.ComponentModel.ISupportInitialize)dgv_airesult).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pcbx_icon).BeginInit();
             gb_key.SuspendLayout();
@@ -222,6 +223,7 @@
             // 
             // gb_key
             // 
+            gb_key.Controls.Add(cmbx_models);
             gb_key.Controls.Add(gb_LLM);
             gb_key.Controls.Add(gb_Gemini);
             gb_key.Controls.Add(rdbtn_LLM);
@@ -741,13 +743,22 @@
             il_selectimages.Images.SetKeyName(0, "select.png");
             il_selectimages.Images.SetKeyName(1, "unselect.png");
             // 
+            // cmbx_models
+            // 
+            cmbx_models.FormattingEnabled = true;
+            cmbx_models.Items.AddRange(new object[] { "3.8-flash", "3.5-flash", "3.5-flash-lite", "2.5-flash", "2.5-flash-lite" });
+            cmbx_models.Location = new Point(283, 26);
+            cmbx_models.Name = "cmbx_models";
+            cmbx_models.Size = new Size(182, 33);
+            cmbx_models.TabIndex = 13;
+            // 
             // FrmAiPostgre
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(869, 653);
-            Controls.Add(gb_map);
             Controls.Add(gb_key);
+            Controls.Add(gb_map);
             Controls.Add(gb_loading);
             Controls.Add(gb_database);
             Controls.Add(pcbx_icon);
@@ -849,5 +860,6 @@
         private Label lblLlmModel;
         private TextBox txtLlmModel;
         private CheckBox chkbx_useMap;
+        private ComboBox cmbx_models;
     }
 }
