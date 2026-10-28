@@ -6,6 +6,7 @@ using System.Data;
 using System.Linq.Expressions;
 using System.Management;
 using System.Runtime;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
@@ -32,6 +33,7 @@ namespace AiPostgreWinForms
         // Other Data
         public static string currentmap = "";
         public static string currentai = "";
+        public static bool closing = false;
 
         public FrmAiPostgre()
         {
@@ -284,6 +286,33 @@ namespace AiPostgreWinForms
                 {
                     if (apikey != "")
                     {
+                        // Check if the current database is already mapped
+                        if (json == "")
+                        {
+                            btn_mapdb_Click(sender, e);
+                            foreach (string file in Directory.GetFiles("MappedDB"))
+                            {
+                                if (file.Contains(txt_db.Text))
+                                {
+                                    var item = lv_maps.Items.Cast<ListViewItem>().FirstOrDefault(x => x.Text == txt_db.Text);
+
+                                    if (item != null)
+                                    {
+                                        lv_maps.Focus();
+                                        lv_maps.SelectedItems.Clear();
+                                        item.Selected = true;
+                                        item.Focused = true;
+                                        item.EnsureVisible();
+                                        // If so, select it
+                                        if (MessageBox.Show("A map of the current database was found, do you want to select it?", "Database already mapped", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
+                                            btn_selectmap_Click(sender, e);
+                                    }
+                                    break;
+                                }
+                            }
+                            btn_backmap_Click(sender, e);
+                        }
+
                         var thread = new Thread(() =>
                         {
                             // Connects to the database
@@ -303,38 +332,6 @@ namespace AiPostgreWinForms
                                         lbl_loadstatus.Text = "Mapping...";
                                         pb_loading.Value = 0; // Restart the bar value 
                                     }));
-
-                                    // Check if the current database is already mapped
-                                    if (Directory.Exists("MappedDB"))
-                                    {
-                                        if (json == "")
-                                        {
-                                            gb_map.Invoke((MethodInvoker)(() =>
-                                            {
-                                                btn_mapdb_Click(sender, e);
-                                                foreach (string file in Directory.GetFiles("MappedDB"))
-                                                {
-                                                    if (file.Contains(txt_db.Text))
-                                                    {
-                                                        var item = lv_maps.Items.Cast<ListViewItem>().FirstOrDefault(x => x.Text == txt_db.Text);
-
-                                                        if (item != null)
-                                                        {
-                                                            lv_maps.Focus();
-                                                            lv_maps.SelectedItems.Clear();
-                                                            item.Selected = true;
-                                                            item.Focused = true;
-                                                            item.EnsureVisible();
-                                                            // If so, select it
-                                                            btn_selectmap_Click(sender, e);
-                                                        }
-                                                        break;
-                                                    }
-                                                }
-                                                btn_backmap_Click(sender, e);
-                                            }));
-                                        }
-                                    }
 
                                     // If the database is already mapped or the map context is disabled, it skips the process
                                     if (json == "" && chkbx_useMap.Checked)
@@ -485,19 +482,25 @@ namespace AiPostgreWinForms
                                         }
                                         catch (HttpRequestException ex)
                                         {
-                                            MessageBox.Show("The provided Gemini API Key has failed to access the endpoint, make sure the API Key or Service is functional", "API Key failed (" + ex.StatusCode + ")", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                                            gb_key.Invoke((MethodInvoker)(() =>
+                                            if (!closing) 
                                             {
-                                                btn_keysettings_Click(null, null);
-                                            }));
+                                                MessageBox.Show("The provided Gemini API Key has failed to access the endpoint, make sure the API Key or Service is functional", "API Key failed (" + ex.StatusCode + ")", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                                gb_key.Invoke((MethodInvoker)(() =>
+                                                {
+                                                    btn_keysettings_Click(null, null);
+                                                }));
+                                            }
                                         }
                                         catch (Exception ex)
                                         {
-                                            MessageBox.Show("The provided Gemini API Key has failed to access the endpoint, make sure the API Key or Service is functional", "API Key failed (" + ex.Message + ")", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                                            gb_key.Invoke((MethodInvoker)(() =>
+                                            if (!closing)
                                             {
-                                                btn_keysettings_Click(null, null);
-                                            }));
+                                                MessageBox.Show("The provided Gemini API Key has failed to access the endpoint, make sure the API Key or Service is functional", "API Key failed (" + ex.Message + ")", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                                gb_key.Invoke((MethodInvoker)(() =>
+                                                {
+                                                    btn_keysettings_Click(null, null);
+                                                }));
+                                            }
                                         }
                                     }
                                     else if (currentai.Equals("LLM"))
@@ -548,11 +551,14 @@ namespace AiPostgreWinForms
                                         }
                                         catch (Exception ex)
                                         {
-                                            MessageBox.Show("LM Studio failed at answering. Ensure LM Studio is running and a model is loaded.\nCheck LM Studio's Server Console, if the call reached the server but didn't process, it's possible that your database is bigger than what your hardware can handle, consider disabling map context or try to use Gemini instead.", "LM Studio Error (" + ex.Message + ")", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                                            gb_key.Invoke((MethodInvoker)(() =>
+                                            if (!closing)
                                             {
-                                                btn_keysettings_Click(null, null);
-                                            }));
+                                                MessageBox.Show("LM Studio failed at answering. Ensure LM Studio is running and a model is loaded.\nCheck LM Studio's Server Console, if the call reached the server but didn't process, it's possible that your database is bigger than what your hardware can handle, consider disabling map context or try to use Gemini instead.", "LM Studio Error (" + ex.Message + ")", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                                gb_key.Invoke((MethodInvoker)(() =>
+                                                {
+                                                    btn_keysettings_Click(null, null);
+                                                }));
+                                            }
                                         }
                                     }
                                     // Execute the generated query
@@ -581,19 +587,38 @@ namespace AiPostgreWinForms
                                     }
                                     catch (Exception)
                                     {
-                                        MessageBox.Show("An error was thrown while running the generated query (" + generatedSql + ")", "The query failed to run in the PostgreSQL Server", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                        if (!btn_tweak.Visible)
-                                            btn_showquery.Invoke((MethodInvoker)(() =>
-                                            {
-                                                btn_showquery_Click(sender, e);
-                                                gb_loading.Visible = false;
-                                                gb_loading.Dock = DockStyle.None;
-                                            }));
+                                        if (!closing)
+                                        {
+                                            MessageBox.Show("An error was thrown while running the generated query (" + generatedSql + ")", "The query failed to run in the PostgreSQL Server", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                            if (!btn_tweak.Visible)
+                                                btn_showquery.Invoke((MethodInvoker)(() =>
+                                                {
+                                                    btn_showquery_Click(sender, e);
+                                                    gb_loading.Visible = false;
+                                                    gb_loading.Dock = DockStyle.None;
+                                                }));
+                                        }
                                     }
                                 }
                                 catch (Exception ex)
                                 {
-                                    MessageBox.Show("The configured Database couldn't be reached, please check if the Database can still be connected with this configuration.", "Database can't be reached", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    if (!closing)
+                                    {
+                                        MessageBox.Show("The configured Database couldn't be reached, please check if the Database can still be connected with this configuration.", "Database can't be reached", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                        btn_dbsettings.Invoke((MethodInvoker)(() =>
+                                        {
+                                            btn_dbsettings_Click(sender, e);
+                                            gb_loading.Visible = false;
+                                            gb_loading.Dock = DockStyle.None;
+                                        }));
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (!closing)
+                                {
+                                    MessageBox.Show("You need to set up a proper Database connection first!", "No Database found", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                     btn_dbsettings.Invoke((MethodInvoker)(() =>
                                     {
                                         btn_dbsettings_Click(sender, e);
@@ -601,16 +626,6 @@ namespace AiPostgreWinForms
                                         gb_loading.Dock = DockStyle.None;
                                     }));
                                 }
-                            }
-                            else
-                            {
-                                MessageBox.Show("You need to set up a proper Database connection first!", "No Database found", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                btn_dbsettings.Invoke((MethodInvoker)(() =>
-                                {
-                                    btn_dbsettings_Click(sender, e);
-                                    gb_loading.Visible = false;
-                                    gb_loading.Dock = DockStyle.None;
-                                }));
                             }
                         });
                         thread.Start();
@@ -730,6 +745,8 @@ namespace AiPostgreWinForms
 
         private void FrmAiPostgre_FormClosing(object sender, FormClosingEventArgs e)
         {
+            closing = true;
+
             // If the user tries to close the program while it's loading...
             if (gb_loading.Visible == true)
             {   // Checks for verification
@@ -984,7 +1001,8 @@ namespace AiPostgreWinForms
                         }
                         catch (Exception ex)
                         {
-                            MessageBox.Show("The Mapped Database couldn't be saved in your drive, make sure the installation path have the necessary permissions or start the program as Administrator.", "Permissions Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            if (!closing)
+                                MessageBox.Show("The Mapped Database couldn't be saved in your drive, make sure the installation path have the necessary permissions or start the program as Administrator.", "Permissions Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
                     gb_map.Invoke((MethodInvoker)(() =>
